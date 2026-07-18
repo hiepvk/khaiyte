@@ -161,7 +161,7 @@
     <h2>KHAI BÁO Y TẾ</h2>
     
     <div class="status-box">
-        <strong>🚀 Cập nhật:</strong> Không có.
+        <strong>🚀 Cập nhật:</strong>
     </div>
 
     <form id="declarationForm">
@@ -172,13 +172,13 @@
                 <input type="text" id="dateCargo" placeholder="VD: 08/07/2026" oninput="syncDates()">
             </div>
             <div class="form-group">
-                <label>Tên chủ hàng:</label>
-                <input type="text" id="goodsOwner" placeholder="Nhập tên chủ hàng">
+                <label style="color: #2980b9;">Tên chủ hàng:</label>
+                <input type="text" id="goodsOwner" placeholder="Nhập tên chủ hàng" oninput="syncOwnerToVehicle()">
             </div>
         </div>
         <div class="form-group">
-            <label>Địa chỉ chủ hàng:</label>
-            <input type="text" id="ownerAddress" placeholder="Nhập địa chỉ">
+            <label style="color: #2980b9;">Địa chỉ chủ hàng:</label>
+            <input type="text" id="ownerAddress" placeholder="Nhập địa chỉ" oninput="syncOwnerToVehicle()">
         </div>
 
         <div class="sub-title">BẢNG DANH MỤC HÀNG HÓA (TRANG 1)</div>
@@ -341,6 +341,15 @@
         const primaryDate = document.getElementById('dateCargo').value;
         document.getElementById('dateConveyance').value = primaryDate;
         document.getElementById('page2SignDate').value = primaryDate;
+    }
+
+    // Hàm đồng bộ thông tin từ phần Chủ hàng xuống Phương tiện
+    function syncOwnerToVehicle() {
+        const ownerName = document.getElementById('goodsOwner').value;
+        const ownerAddr = document.getElementById('ownerAddress').value;
+        
+        document.getElementById('operatorName').value = ownerName;
+        document.getElementById('conveyanceAddress').value = ownerAddr;
     }
 
     function addTruckRow() {
