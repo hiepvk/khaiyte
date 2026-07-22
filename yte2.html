@@ -456,7 +456,7 @@
 
                 const truckRows = document.querySelectorAll('.truck-item');
                 let startY = 429; 
-                let lineSpacing = 14.3;
+                let lineSpacing = 15.3;
 
                 truckRows.forEach((rowElement, i) => {
                     const currentY = startY - (i * lineSpacing);
@@ -471,7 +471,7 @@
                     if (tonnage) secondPage.drawText(tonnage, { x: 188, y: currentY, size: 11, font: customFont });
                     if (weight) secondPage.drawText(weight, { x: 261, y: currentY, size: 11, font: customFont });
                     if (cargo) secondPage.drawText(cargo, { x: 336, y: currentY, size: 11, font: customFont });
-                    if (staff) secondPage.drawText(staff, { x: 480, y: currentY, size: 11, font: customFont });
+                    if (staff) secondPage.drawText(staff, { x: 478, y: currentY, size: 11, font: customFont });
                 });
             }
 
