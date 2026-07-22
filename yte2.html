@@ -426,12 +426,12 @@
             if (ownerAddress) firstPage.drawText(ownerAddress, { x: 105, y: 624.3, size: 11, font: customFont });
             
             // Điền bảng hàng hóa Trang 1
-            if (page1CargoName1) firstPage.drawText(page1CargoName1, { x: 90, y: 559, size: 10, font: customFont });
-            if (page1CargoQty1) firstPage.drawText(page1CargoQty1, { x: 335, y: 559, size: 10, font: customFont });
-            if (page1CargoWeight1) firstPage.drawText(page1CargoWeight1, { x: 460, y: 559, size: 10, font: customFont });
+            if (page1CargoName1) firstPage.drawText(page1CargoName1, { x: 90, y: 559, size: 11, font: customFont });
+            if (page1CargoQty1) firstPage.drawText(page1CargoQty1, { x: 335, y: 559, size: 11, font: customFont });
+            if (page1CargoWeight1) firstPage.drawText(page1CargoWeight1, { x: 460, y: 559, size: 11, font: customFont });
 
-            if (page1TotalQty) firstPage.drawText(page1TotalQty, { x: 335, y: 527, size: 10, font: customFont });
-            if (page1TotalWeight) firstPage.drawText(page1TotalWeight, { x: 460, y: 527, size: 10, font: customFont });
+            if (page1TotalQty) firstPage.drawText(page1TotalQty, { x: 335, y: 541, size: 12, font: customFont });
+            if (page1TotalWeight) firstPage.drawText(page1TotalWeight, { x: 460, y: 541, size: 12, font: customFont });
 
             // Thông tin chung phần phương tiện Trang 1
             if (operatorName) firstPage.drawText(operatorName, { x: 125, y: 429, size: 11, font: customFont });
@@ -439,19 +439,19 @@
             if (dateConveyance) firstPage.drawText(dateConveyance, { x: 430, y: 398, size: 11, font: customFont });
 
             // Điền bảng phương tiện Trang 1
-            if (p1RegNo1) firstPage.drawText(p1RegNo1, { x: 98, y: 307, size: 10, font: customFont });
-            if (p1Qty1) firstPage.drawText(p1Qty1, { x: 249, y: 307, size: 10, font: customFont });
-            if (p1Tonnage1) firstPage.drawText(p1Tonnage1, { x: 375, y: 307, size: 10, font: customFont });
-            if (p1Staff1) firstPage.drawText(p1Staff1, { x: 462, y: 307, size: 10, font: customFont });
-            if (p1Passenger1) firstPage.drawText(p1Passenger1, { x: 537, y: 307, size: 10, font: customFont });
+            if (p1RegNo1) firstPage.drawText(p1RegNo1, { x: 98, y: 327, size: 11, font: customFont });
+            if (p1Qty1) firstPage.drawText(p1Qty1, { x: 249, y: 327, size: 11, font: customFont });
+            if (p1Tonnage1) firstPage.drawText(p1Tonnage1, { x: 375, y: 327, size: 11, font: customFont });
+            if (p1Staff1) firstPage.drawText(p1Staff1, { x: 462, y: 327, size: 11, font: customFont });
+            if (p1Passenger1) firstPage.drawText(p1Passenger1, { x: 537, y: 327, size: 11, font: customFont });
 
             // --- CHÈN CHỮ VÀO TRANG 2 ---
             if (secondPage) {
-                if (page2SignDate) secondPage.drawText(page2SignDate, { x: 110, y: 670, size: 11, font: customFont });
+                if (page2SignDate) secondPage.drawText(page2SignDate, { x: 110, y: 747.8, size: 11, font: customFont });
 
                 // CHỈ CHÈN CHỮ KÝ DUY NHẤT Ở TRANG 2
                 if (declarantName) {
-                    secondPage.drawText(declarantName, { x: 410, y: 180, size: 11, font: customFont });
+                    secondPage.drawText(declarantName, { x: 455, y: 700, size: 12, font: customFont });
                 }
 
                 const truckRows = document.querySelectorAll('.truck-item');
