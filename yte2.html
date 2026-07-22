@@ -455,7 +455,7 @@
                 }
 
                 const truckRows = document.querySelectorAll('.truck-item');
-                let startY = 399; 
+                let startY = 350; 
                 let lineSpacing = 14.3;
 
                 truckRows.forEach((rowElement, i) => {
@@ -467,11 +467,11 @@
                     const cargo = rowElement.querySelector('.cargoName').value;
                     const staff = rowElement.querySelector('.staffNum').value;
 
-                    if (plate) secondPage.drawText(plate, { x: 98, y: currentY, size: 10, font: customFont });
-                    if (tonnage) secondPage.drawText(tonnage, { x: 188, y: currentY, size: 10, font: customFont });
-                    if (weight) secondPage.drawText(weight, { x: 261, y: currentY, size: 10, font: customFont });
-                    if (cargo) secondPage.drawText(cargo, { x: 336, y: currentY, size: 10, font: customFont });
-                    if (staff) secondPage.drawText(staff, { x: 480, y: currentY, size: 10, font: customFont });
+                    if (plate) secondPage.drawText(plate, { x: 98, y: currentY, size: 11, font: customFont });
+                    if (tonnage) secondPage.drawText(tonnage, { x: 188, y: currentY, size: 11, font: customFont });
+                    if (weight) secondPage.drawText(weight, { x: 261, y: currentY, size: 11, font: customFont });
+                    if (cargo) secondPage.drawText(cargo, { x: 336, y: currentY, size: 11, font: customFont });
+                    if (staff) secondPage.drawText(staff, { x: 480, y: currentY, size: 11, font: customFont });
                 });
             }
 
