@@ -153,7 +153,7 @@
     <h2>KHAI BÁO Y TẾ</h2>
     
     <div class="status-box">
-        <strong>🚀 Cập nhật:</strong> Tự động đồng bộ Chủ hàng $\rightarrow$ Chủ phương tiện & Chữ ký người khai (Trang 1 & 2).
+        <strong>🚀 Cập nhật mới:</strong> Chữ ký duy nhất tại Trang 2. Mặc định dùng Tên chủ hàng, có thể chỉnh sửa tự do tên Người khai nếu khai hộ.
     </div>
 
     <form id="declarationForm" oninput="syncAllData()">
@@ -164,7 +164,7 @@
                 <input type="text" id="dateCargo" placeholder="VD: 08/07/2026">
             </div>
             <div class="form-group">
-                <label style="color: #2980b9;">Tên chủ hàng (Sẽ điền cả chữ ký):</label>
+                <label style="color: #2980b9;">Tên chủ hàng:</label>
                 <input type="text" id="goodsOwner" placeholder="Nhập tên chủ hàng">
             </div>
         </div>
@@ -244,9 +244,15 @@
 
         <h3>3. Danh sách phương tiện vận tải & Hàng hóa (Trang 2)</h3>
         
-        <div class="form-group" style="max-width: 300px; margin-bottom: 20px;">
-            <label>Ngày, tháng, năm / Date (Trang 2):</label>
-            <input type="text" id="page2SignDate" placeholder="Sẽ tự động điền...">
+        <div class="row">
+            <div class="form-group">
+                <label>Ngày, tháng, năm / Date (Trang 2):</label>
+                <input type="text" id="page2SignDate" placeholder="Sẽ tự động điền...">
+            </div>
+            <div class="form-group">
+                <label style="color: #e67e22;">Người khai (Ký, ghi rõ họ tên Trang 2):</label>
+                <input type="text" id="declarantName" placeholder="Có thể sửa nếu khác tên chủ hàng">
+            </div>
         </div>
         
         <div id="truckContainer">
@@ -290,6 +296,14 @@
 
 <script>
     let truckCount = 1;
+    let isDeclarantManuallyEdited = false; // Cờ kiểm tra nếu người dùng tự sửa tên người khai
+
+    // Lắng nghe nếu người dùng tự tay sửa ô Người khai
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('declarantName').addEventListener('input', () => {
+            isDeclarantManuallyEdited = true;
+        });
+    });
 
     // Tập trung quản lý toàn bộ luồng đồng bộ dữ liệu
     function syncAllData() {
@@ -300,9 +314,14 @@
             document.getElementById('page2SignDate').value = primaryDate;
         }
 
-        // 2. Đồng bộ Chủ hàng -> Người điều khiển
-        document.getElementById('operatorName').value = document.getElementById('goodsOwner').value;
+        // 2. Đồng bộ Chủ hàng -> Người điều khiển & Tên Người khai (nếu chưa tự gõ)
+        const goodsOwnerVal = document.getElementById('goodsOwner').value;
+        document.getElementById('operatorName').value = goodsOwnerVal;
         document.getElementById('conveyanceAddress').value = document.getElementById('ownerAddress').value;
+
+        if (!isDeclarantManuallyEdited) {
+            document.getElementById('declarantName').value = goodsOwnerVal;
+        }
 
         // 3. Đồng bộ từ Xe số 1 (Trang 2) lên Bảng phương tiện Trang 1
         const truck1 = document.getElementById('truck_row_1');
@@ -394,6 +413,7 @@
             const operatorName = document.getElementById('operatorName').value;
             const conveyanceAddress = document.getElementById('conveyanceAddress').value;
             const page2SignDate = document.getElementById('page2SignDate').value;
+            const declarantName = document.getElementById('declarantName').value; // Tên người khai
 
             // Đọc dữ liệu bảng hàng hóa (Trang 1)
             const page1CargoName1 = document.getElementById('page1CargoName1').value;
@@ -412,17 +432,10 @@
 
             // --- CHÈN CHỮ VÀO TRANG 1 ---
             if (dateCargo) firstPage.drawText(dateCargo, { x: 430, y: 653.3, size: 11, font: customFont });
-            if (goodsOwner) {
-                // Điền tên chủ hàng
-                firstPage.drawText(goodsOwner, { x: 210, y: 639, size: 12, font: customFont });
-                
-                // TỰ ĐỘNG CHÈN CHỮ KÝ TRANG 1 (Mục Khai hàng hóa: y=485, Mục Khai phương tiện: y=250)
-                firstPage.drawText(goodsOwner, { x: 430, y: 485, size: 11, font: customFont });
-                firstPage.drawText(goodsOwner, { x: 430, y: 250, size: 11, font: customFont });
-            }
+            if (goodsOwner) firstPage.drawText(goodsOwner, { x: 210, y: 639, size: 12, font: customFont });
             if (ownerAddress) firstPage.drawText(ownerAddress, { x: 105, y: 624.3, size: 11, font: customFont });
             
-            // Điền bảng hàng hóa Trang 1 (Chỉ 1 dòng)
+            // Điền bảng hàng hóa Trang 1
             if (page1CargoName1) firstPage.drawText(page1CargoName1, { x: 90, y: 559, size: 10, font: customFont });
             if (page1CargoQty1) firstPage.drawText(page1CargoQty1, { x: 335, y: 559, size: 10, font: customFont });
             if (page1CargoWeight1) firstPage.drawText(page1CargoWeight1, { x: 460, y: 559, size: 10, font: customFont });
@@ -435,7 +448,7 @@
             if (conveyanceAddress) firstPage.drawText(conveyanceAddress, { x: 125, y: 393, size: 11, font: customFont });
             if (dateConveyance) firstPage.drawText(dateConveyance, { x: 430, y: 379, size: 11, font: customFont });
 
-            // Điền bảng phương tiện Trang 1 (Chỉ 1 dòng)
+            // Điền bảng phương tiện Trang 1
             if (p1RegNo1) firstPage.drawText(p1RegNo1, { x: 98, y: 307, size: 10, font: customFont });
             if (p1Qty1) firstPage.drawText(p1Qty1, { x: 249, y: 307, size: 10, font: customFont });
             if (p1Tonnage1) firstPage.drawText(p1Tonnage1, { x: 375, y: 307, size: 10, font: customFont });
@@ -446,9 +459,9 @@
             if (secondPage) {
                 if (page2SignDate) secondPage.drawText(page2SignDate, { x: 110, y: 670, size: 11, font: customFont });
 
-                // TỰ ĐỘNG CHÈN CHỮ KÝ TRANG 2
-                if (goodsOwner) {
-                    secondPage.drawText(goodsOwner, { x: 430, y: 200, size: 11, font: customFont });
+                // CHỈ CHÈN CHỮ KÝ DUY NHẤT Ở TRANG 2 (Vị trí Người khai)
+                if (declarantName) {
+                    secondPage.drawText(declarantName, { x: 410, y: 180, size: 11, font: customFont });
                 }
 
                 const truckRows = document.querySelectorAll('.truck-item');
