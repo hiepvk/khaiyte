@@ -410,7 +410,7 @@
                 return res.arrayBuffer();
             });
 
-            const pdfUrl = './TKKDYT1.pdf';
+            const pdfUrl = './KDYT.pdf';
             const existingPdfBytes = await fetch(pdfUrl).then(res => {
                 if (!res.ok) throw new Error("Không thể tải file PDF phôi mẫu!");
                 return res.arrayBuffer();
