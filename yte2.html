@@ -153,7 +153,7 @@
     <h2>KHAI BÁO Y TẾ</h2>
     
     <div class="status-box">
-        <strong>🚀 Cập nhật mới:</strong> Chữ ký duy nhất tại Trang 2. Mặc định dùng Tên chủ hàng, có thể chỉnh sửa tự do tên Người khai nếu khai hộ.
+        <strong>⚙️ Cập nhật:</strong> Bảng số liệu phương tiện (Trang 1) đã được tách hoàn toàn độc lập, anh có thể tự nhập tay hoàn toàn theo nhu cầu.
     </div>
 
     <form id="declarationForm" oninput="syncAllData()">
@@ -217,28 +217,28 @@
             <input type="text" id="conveyanceAddress" placeholder="Sẽ tự động điền...">
         </div>
 
-        <div class="sub-title">BẢNG SỐ LIỆU PHƯƠNG TIỆN (TRANG 1) - Tự động điền từ Xe số 1</div>
+        <div class="sub-title">BẢNG SỐ LIỆU PHƯƠNG TIỆN (TRANG 1) - Nhập tay độc lập</div>
         
         <div class="row-5">
             <div class="form-group">
                 <label>Số hiệu / biển số:</label>
-                <input type="text" id="p1RegNo1" placeholder="15C-133.97">
+                <input type="text" id="p1RegNo1" placeholder="VD: Container">
             </div>
             <div class="form-group">
                 <label>Số lượng:</label>
-                <input type="text" id="p1Qty1" value="1">
+                <input type="text" id="p1Qty1" placeholder="VD: 1">
             </div>
             <div class="form-group">
-                <label>Trọng tải:</label>
-                <input type="text" id="p1Tonnage1" placeholder="35">
+                <label>Trọng tải (tấn):</label>
+                <input type="text" id="p1Tonnage1" placeholder="VD: 35">
             </div>
             <div class="form-group">
                 <label>Nhân viên:</label>
-                <input type="text" id="p1Staff1" placeholder="1">
+                <input type="text" id="p1Staff1" placeholder="VD: 1">
             </div>
             <div class="form-group">
                 <label>Hành khách:</label>
-                <input type="text" id="p1Passenger1" value="0">
+                <input type="text" id="p1Passenger1" placeholder="VD: 0">
             </div>
         </div>
 
@@ -296,16 +296,14 @@
 
 <script>
     let truckCount = 1;
-    let isDeclarantManuallyEdited = false; // Cờ kiểm tra nếu người dùng tự sửa tên người khai
+    let isDeclarantManuallyEdited = false;
 
-    // Lắng nghe nếu người dùng tự tay sửa ô Người khai
     document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('declarantName').addEventListener('input', () => {
             isDeclarantManuallyEdited = true;
         });
     });
 
-    // Tập trung quản lý toàn bộ luồng đồng bộ dữ liệu
     function syncAllData() {
         // 1. Đồng bộ Ngày tháng
         const primaryDate = document.getElementById('dateCargo').value;
@@ -314,21 +312,13 @@
             document.getElementById('page2SignDate').value = primaryDate;
         }
 
-        // 2. Đồng bộ Chủ hàng -> Người điều khiển & Tên Người khai (nếu chưa tự gõ)
+        // 2. Đồng bộ Chủ hàng -> Người điều khiển & Tên Người khai
         const goodsOwnerVal = document.getElementById('goodsOwner').value;
         document.getElementById('operatorName').value = goodsOwnerVal;
         document.getElementById('conveyanceAddress').value = document.getElementById('ownerAddress').value;
 
         if (!isDeclarantManuallyEdited) {
             document.getElementById('declarantName').value = goodsOwnerVal;
-        }
-
-        // 3. Đồng bộ từ Xe số 1 (Trang 2) lên Bảng phương tiện Trang 1
-        const truck1 = document.getElementById('truck_row_1');
-        if (truck1) {
-            document.getElementById('p1RegNo1').value = truck1.querySelector('.truckPlate').value;
-            document.getElementById('p1Tonnage1').value = truck1.querySelector('.netTonnage').value;
-            document.getElementById('p1Staff1').value = truck1.querySelector('.staffNum').value;
         }
     }
 
@@ -413,7 +403,7 @@
             const operatorName = document.getElementById('operatorName').value;
             const conveyanceAddress = document.getElementById('conveyanceAddress').value;
             const page2SignDate = document.getElementById('page2SignDate').value;
-            const declarantName = document.getElementById('declarantName').value; // Tên người khai
+            const declarantName = document.getElementById('declarantName').value;
 
             // Đọc dữ liệu bảng hàng hóa (Trang 1)
             const page1CargoName1 = document.getElementById('page1CargoName1').value;
@@ -443,12 +433,12 @@
             if (page1TotalQty) firstPage.drawText(page1TotalQty, { x: 335, y: 527, size: 10, font: customFont });
             if (page1TotalWeight) firstPage.drawText(page1TotalWeight, { x: 460, y: 527, size: 10, font: customFont });
 
-            // Thông tin chung phần phương tiện
+            // Thông tin chung phần phương tiện Trang 1
             if (operatorName) firstPage.drawText(operatorName, { x: 125, y: 408, size: 11, font: customFont });
             if (conveyanceAddress) firstPage.drawText(conveyanceAddress, { x: 125, y: 393, size: 11, font: customFont });
             if (dateConveyance) firstPage.drawText(dateConveyance, { x: 430, y: 379, size: 11, font: customFont });
 
-            // Điền bảng phương tiện Trang 1
+            // Điền bảng phương tiện Trang 1 (Độc lập)
             if (p1RegNo1) firstPage.drawText(p1RegNo1, { x: 98, y: 307, size: 10, font: customFont });
             if (p1Qty1) firstPage.drawText(p1Qty1, { x: 249, y: 307, size: 10, font: customFont });
             if (p1Tonnage1) firstPage.drawText(p1Tonnage1, { x: 375, y: 307, size: 10, font: customFont });
@@ -459,7 +449,7 @@
             if (secondPage) {
                 if (page2SignDate) secondPage.drawText(page2SignDate, { x: 110, y: 670, size: 11, font: customFont });
 
-                // CHỈ CHÈN CHỮ KÝ DUY NHẤT Ở TRANG 2 (Vị trí Người khai)
+                // CHỈ CHÈN CHỮ KÝ DUY NHẤT Ở TRANG 2
                 if (declarantName) {
                     secondPage.drawText(declarantName, { x: 410, y: 180, size: 11, font: customFont });
                 }
