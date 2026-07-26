@@ -174,7 +174,7 @@
     <h2>KHAI BÁO Y TẾ</h2>
     
     <div class="status-box">
-        <strong>⚙️ Cập nhật:</strong> Đã thêm tự động viết hoa biển số xe & định dạng ngày DD/MM/YYYY.
+        <strong>⚙️ Cập nhật:</strong> Tự động thêm chữ "Tấn" khi nhập số ở các mục trọng lượng / tải trọng.
     </div>
 
     <form id="declarationForm" oninput="syncAllData()">
@@ -210,7 +210,7 @@
             </div>
             <div class="form-group">
                 <label>Trọng lượng:</label>
-                <input type="text" id="page1CargoWeight1" placeholder="VD: 26 Tấn">
+                <input type="text" id="page1CargoWeight1" placeholder="Nhập số VD: 26" oninput="formatTonInput(this)">
             </div>
         </div>
 
@@ -221,7 +221,7 @@
             </div>
             <div class="form-group">
                 <label>Tổng cộng Trọng lượng (Total Gross weight):</label>
-                <input type="text" id="page1TotalWeight" placeholder="VD: 26 Tấn">
+                <input type="text" id="page1TotalWeight" placeholder="Nhập số VD: 26" oninput="formatTonInput(this)">
             </div>
         </div>
 
@@ -254,7 +254,7 @@
             </div>
             <div class="form-group">
                 <label>Trọng tải (tấn):</label>
-                <input type="text" id="p1Tonnage1" placeholder="VD: 30 Tấn">
+                <input type="text" id="p1Tonnage1" placeholder="Nhập số VD: 30" oninput="formatTonInput(this)">
             </div>
             <div class="form-group">
                 <label>Nhân viên:</label>
@@ -291,13 +291,13 @@
                     </div>
                     <div class="form-group">
                         <label>Tải trọng xe (Net Tonnage):</label>
-                        <input type="text" class="netTonnage" placeholder="VD: 30 Tấn">
+                        <input type="text" class="netTonnage" placeholder="Nhập số VD: 30" oninput="formatTonInput(this)">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
                         <label>Trọng lượng hàng hóa (Gross Weight):</label>
-                        <input type="text" class="grossWeight" placeholder="VD: 26 Tấn">
+                        <input type="text" class="grossWeight" placeholder="Nhập số VD: 26" oninput="formatTonInput(this)">
                     </div>
                     <div class="form-group">
                         <label>Danh mục hàng hóa (Name of Cargo):</label>
@@ -328,7 +328,22 @@
         });
     });
 
-    // Hàm tự động chuyển chữ cái trong biển số xe thành viết hoa (vd: 15c11315 -> 15C11315)
+    // Hàm tự động thêm chữ " Tấn" sau khi nhập số
+    function formatTonInput(input) {
+        // Giữ lại số và dấu chấm, dấu phẩy thập phân (nếu có)
+        let num = input.value.replace(/[^0-9.,]/g, '');
+        if (num.length > 0) {
+            input.value = num + " Tấn";
+            // Đặt con trỏ chuột đứng ngay sau phần số để gõ tiếp dễ dàng
+            const pos = num.length;
+            input.setSelectionRange(pos, pos);
+        } else {
+            input.value = "";
+        }
+        syncAllData();
+    }
+
+    // Hàm tự động chuyển chữ cái trong biển số xe thành viết hoa
     function formatPlateInput(input) {
         input.value = input.value.toUpperCase();
         syncAllData();
@@ -401,13 +416,13 @@
                     </div>
                     <div class="form-group">
                         <label>Tải trọng xe (Net Tonnage):</label>
-                        <input type="text" class="netTonnage" placeholder="VD: 30 Tấn">
+                        <input type="text" class="netTonnage" placeholder="Nhập số VD: 30" oninput="formatTonInput(this)">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
                         <label>Trọng lượng hàng hóa (Gross Weight):</label>
-                        <input type="text" class="grossWeight" placeholder="VD: 26 Tấn">
+                        <input type="text" class="grossWeight" placeholder="Nhập số VD: 26" oninput="formatTonInput(this)">
                     </div>
                     <div class="form-group">
                         <label>Danh mục hàng hóa (Name of Cargo):</label>
