@@ -174,7 +174,7 @@
     <h2>KHAI BÁO Y TẾ</h2>
     
     <div class="status-box">
-        <strong>⚙️ Cập nhật:</strong> Cân chỉnh tọa độ chuẩn tuyệt đối theo phôi PDF gốc. Nội dung chữ nằm chính giữa các ô.
+        <strong>⚙️ Cập nhật:</strong> Đã sửa lại toàn bộ tọa độ lề X/Y cho bảng Trang 1 và Trang 2 chuẩn đét từng ô.
     </div>
 
     <form id="declarationForm" oninput="syncAllData()">
@@ -328,13 +328,12 @@
         });
     });
 
-    // Hàm căn giữa chữ chuẩn tuyệt đối theo chiều ngang và dọc trong ô PDF
+    // Hàm căn giữa chữ chuẩn tuyệt đối
     function drawCenteredText(page, text, cellStartX, cellWidth, cellCenterY, fontSize, font) {
         if (!text) return;
         const textWidth = font.widthOfTextAtSize(text, fontSize);
         const centeredX = cellStartX + (cellWidth - textWidth) / 2;
-        // Trừ bớt 3.5pt từ tâm ô để baseline của phông chữ vừa khớp chính giữa
-        const centeredY = cellCenterY - (fontSize / 3);
+        const centeredY = cellCenterY - (fontSize / 3.2);
         page.drawText(text, { x: centeredX, y: centeredY, size: fontSize, font: font });
     }
 
@@ -502,25 +501,25 @@
             if (goodsOwner) firstPage.drawText(goodsOwner, { x: 210, y: 639, size: 12, font: customFont });
             if (ownerAddress) firstPage.drawText(ownerAddress, { x: 105, y: 624.3, size: 11, font: customFont });
             
-            // 1. Điền bảng hàng hóa Trang 1 (Tâm Y hàng 1 = 560.5, tâm Y dòng tổng = 542.5)
-            drawCenteredText(firstPage, page1CargoName1, 75, 212, 560.5, 11, customFont);
-            drawCenteredText(firstPage, page1CargoQty1, 287, 142, 560.5, 11, customFont);
-            drawCenteredText(firstPage, page1CargoWeight1, 429, 67, 560.5, 11, customFont);
+            // 1. Điền bảng hàng hóa Trang 1 (Dời X sang phải +45pt)
+            drawCenteredText(firstPage, page1CargoName1, 120, 212, 560.5, 11, customFont);
+            drawCenteredText(firstPage, page1CargoQty1, 332, 142, 560.5, 11, customFont);
+            drawCenteredText(firstPage, page1CargoWeight1, 474, 67, 560.5, 11, customFont);
 
-            drawCenteredText(firstPage, page1TotalQty, 287, 142, 542.5, 11, customFont);
-            drawCenteredText(firstPage, page1TotalWeight, 429, 67, 542.5, 11, customFont);
+            drawCenteredText(firstPage, page1TotalQty, 332, 142, 542.5, 11, customFont);
+            drawCenteredText(firstPage, page1TotalWeight, 474, 67, 542.5, 11, customFont);
 
             // Thông tin chung phần phương tiện Trang 1
             if (operatorName) firstPage.drawText(operatorName, { x: 125, y: 429, size: 11, font: customFont });
             if (conveyanceAddress) firstPage.drawText(conveyanceAddress, { x: 125, y: 413, size: 12, font: customFont });
             if (dateConveyance) firstPage.drawText(dateConveyance, { x: 430, y: 398, size: 11, font: customFont });
 
-            // 2. Điền bảng phương tiện Trang 1 (Tâm Y hàng 1 = 319.5)
-            drawCenteredText(firstPage, p1RegNo1, 56, 126, 319.5, 11, customFont);
-            drawCenteredText(firstPage, p1Qty1, 182, 126, 319.5, 11, customFont);
-            drawCenteredText(firstPage, p1Tonnage1, 308, 93, 319.5, 11, customFont);
-            drawCenteredText(firstPage, p1Staff1, 401, 57, 319.5, 11, customFont);
-            drawCenteredText(firstPage, p1Passenger1, 458, 59, 319.5, 11, customFont);
+            // 2. Điền bảng phương tiện Trang 1 (Dời X sang phải +45pt)
+            drawCenteredText(firstPage, p1RegNo1, 101, 126, 319.5, 11, customFont);
+            drawCenteredText(firstPage, p1Qty1, 227, 126, 319.5, 11, customFont);
+            drawCenteredText(firstPage, p1Tonnage1, 353, 93, 319.5, 11, customFont);
+            drawCenteredText(firstPage, p1Staff1, 446, 57, 319.5, 11, customFont);
+            drawCenteredText(firstPage, p1Passenger1, 503, 59, 319.5, 11, customFont);
 
             // --- CHÈN CHỮ VÀO TRANG 2 ---
             if (secondPage) {
@@ -531,16 +530,16 @@
                 }
 
                 const truckRows = document.querySelectorAll('.truck-item');
-                let startCenterY = 413.5; // Tâm Y của hàng 1 ở Trang 2
-                let lineSpacing = 17.05;  // Khoảng cách dòng chính xác theo phôi gốc
+                let startCenterY = 413.5;
+                let lineSpacing = 17.05;
 
-                // Cấu hình lề X và độ rộng chính xác từng ô ở Trang 2
+                // Cấu hình lề X mới dời sang phải +45pt để trùng ô bảng Trang 2
                 const colSpecs = {
-                    plate:   { startX: 56,  width: 90 },  // Cột Số hiệu/biển số
-                    tonnage: { startX: 146, width: 57 },  // Cột Tải trọng xe
-                    weight:  { startX: 203, width: 66 },  // Cột Trọng lượng hàng hóa
-                    cargo:   { startX: 269, width: 132 }, // Cột Danh mục hàng hóa
-                    staff:   { startX: 401, width: 57 }   // Cột Số nhân viên
+                    plate:   { startX: 101, width: 90 },  // Cột Số hiệu/biển số
+                    tonnage: { startX: 191, width: 57 },  // Cột Tải trọng xe
+                    weight:  { startX: 248, width: 66 },  // Cột Trọng lượng hàng hóa
+                    cargo:   { startX: 314, width: 132 }, // Cột Danh mục hàng hóa
+                    staff:   { startX: 446, width: 57 }   // Cột Số nhân viên
                 };
 
                 truckRows.forEach((rowElement, i) => {
