@@ -174,7 +174,7 @@
     <h2>KHAI BÁO Y TẾ</h2>
     
     <div class="status-box">
-        <strong>⚙️ Cập nhật:</strong> Các mục Tấn chỉ cho phép nhập tối đa 2 chữ số & tự động ghép chữ "Tấn".
+        <strong>⚙️ Cập nhật:</strong> Tự động căn giữa nội dung trong các ô của bảng PDF giống như Excel.
     </div>
 
     <form id="declarationForm" oninput="syncAllData()">
@@ -328,19 +328,21 @@
         });
     });
 
+    // Hàm bổ trợ: Vẽ chữ căn giữa trong một vùng/cột (ô) quy định
+    function drawCenteredText(page, text, cellStartX, cellWidth, y, fontSize, font) {
+        if (!text) return;
+        const textWidth = font.widthOfTextAtSize(text, fontSize);
+        const centeredX = cellStartX + (cellWidth - textWidth) / 2;
+        page.drawText(text, { x: centeredX, y: y, size: fontSize, font: font });
+    }
+
     // Hàm chỉ cho phép nhập số, giới hạn tối đa 2 chữ số và tự động thêm " Tấn"
     function formatTonInput(input) {
-        // Lấy riêng các chữ số (0-9)
         let num = input.value.replace(/\D/g, '');
-        
-        // Giới hạn tối đa 2 chữ số
-        if (num.length > 2) {
-            num = num.substring(0, 2);
-        }
+        if (num.length > 2) num = num.substring(0, 2);
 
         if (num.length > 0) {
             input.value = num + " Tấn";
-            // Giữ con trỏ chuột đứng ngay sau phần số vừa nhập
             const pos = num.length;
             input.setSelectionRange(pos, pos);
         } else {
@@ -355,13 +357,10 @@
         syncAllData();
     }
 
-    // Hàm chỉ cho phép nhập số và tự động thêm dấu / khi nhập đủ 8 số (VD: 26072026 -> 26/07/2026)
+    // Hàm chỉ cho phép nhập số và tự động thêm dấu / khi nhập đủ 8 số
     function formatDateInput(input) {
         let value = input.value.replace(/\D/g, '');
-        
-        if (value.length > 8) {
-            value = value.substring(0, 8);
-        }
+        if (value.length > 8) value = value.substring(0, 8);
 
         if (value.length > 4) {
             input.value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4);
@@ -370,7 +369,6 @@
         } else {
             input.value = value;
         }
-
         syncAllData();
     }
 
@@ -388,14 +386,12 @@
     }
 
     function syncAllData() {
-        // 1. Đồng bộ Ngày tháng
         const primaryDate = document.getElementById('dateCargo').value;
         if (primaryDate) {
             document.getElementById('dateConveyance').value = primaryDate;
             document.getElementById('page2SignDate').value = primaryDate;
         }
 
-        // 2. Đồng bộ Chủ hàng -> Người điều khiển & Tên Người khai
         const goodsOwnerVal = document.getElementById('goodsOwner').value;
         document.getElementById('operatorName').value = goodsOwnerVal;
         document.getElementById('conveyanceAddress').value = document.getElementById('ownerAddress').value;
@@ -508,31 +504,30 @@
             if (goodsOwner) firstPage.drawText(goodsOwner, { x: 210, y: 639, size: 12, font: customFont });
             if (ownerAddress) firstPage.drawText(ownerAddress, { x: 105, y: 624.3, size: 11, font: customFont });
             
-            // Điền bảng hàng hóa Trang 1
-            if (page1CargoName1) firstPage.drawText(page1CargoName1, { x: 90, y: 559, size: 11, font: customFont });
-            if (page1CargoQty1) firstPage.drawText(page1CargoQty1, { x: 335, y: 559, size: 11, font: customFont });
-            if (page1CargoWeight1) firstPage.drawText(page1CargoWeight1, { x: 460, y: 559, size: 11, font: customFont });
+            // Điền bảng hàng hóa Trang 1 (Căn giữa ô)
+            drawCenteredText(firstPage, page1CargoName1, 52, 230, 559, 11, customFont);
+            drawCenteredText(firstPage, page1CargoQty1, 282, 120, 559, 11, customFont);
+            drawCenteredText(firstPage, page1CargoWeight1, 402, 120, 559, 11, customFont);
 
-            if (page1TotalQty) firstPage.drawText(page1TotalQty, { x: 335, y: 541, size: 12, font: customFont });
-            if (page1TotalWeight) firstPage.drawText(page1TotalWeight, { x: 460, y: 541, size: 12, font: customFont });
+            drawCenteredText(firstPage, page1TotalQty, 282, 120, 541, 12, customFont);
+            drawCenteredText(firstPage, page1TotalWeight, 402, 120, 541, 12, customFont);
 
             // Thông tin chung phần phương tiện Trang 1
             if (operatorName) firstPage.drawText(operatorName, { x: 125, y: 429, size: 11, font: customFont });
             if (conveyanceAddress) firstPage.drawText(conveyanceAddress, { x: 125, y: 413, size: 12, font: customFont });
             if (dateConveyance) firstPage.drawText(dateConveyance, { x: 430, y: 398, size: 11, font: customFont });
 
-            // Điền bảng phương tiện Trang 1
-            if (p1RegNo1) firstPage.drawText(p1RegNo1, { x: 98, y: 327, size: 11, font: customFont });
-            if (p1Qty1) firstPage.drawText(p1Qty1, { x: 249, y: 327, size: 11, font: customFont });
-            if (p1Tonnage1) firstPage.drawText(p1Tonnage1, { x: 375, y: 327, size: 11, font: customFont });
-            if (p1Staff1) firstPage.drawText(p1Staff1, { x: 462, y: 327, size: 11, font: customFont });
-            if (p1Passenger1) firstPage.drawText(p1Passenger1, { x: 537, y: 327, size: 11, font: customFont });
+            // Điền bảng phương tiện Trang 1 (Căn giữa ô)
+            drawCenteredText(firstPage, p1RegNo1, 52, 115, 327, 11, customFont);
+            drawCenteredText(firstPage, p1Qty1, 167, 125, 327, 11, customFont);
+            drawCenteredText(firstPage, p1Tonnage1, 292, 120, 327, 11, customFont);
+            drawCenteredText(firstPage, p1Staff1, 412, 85, 327, 11, customFont);
+            drawCenteredText(firstPage, p1Passenger1, 497, 80, 327, 11, customFont);
 
             // --- CHÈN CHỮ VÀO TRANG 2 ---
             if (secondPage) {
                 if (page2SignDate) secondPage.drawText(page2SignDate, { x: 110, y: 747.8, size: 11, font: customFont });
 
-                // CHỈ CHÈN CHỮ KÝ DUY NHẤT Ở TRANG 2
                 if (declarantName) {
                     secondPage.drawText(declarantName, { x: 455, y: 700, size: 12, font: customFont });
                 }
@@ -540,6 +535,15 @@
                 const truckRows = document.querySelectorAll('.truck-item');
                 let startY = 429; 
                 let lineSpacing = 17.3;
+
+                // CẤU HÌNH TỌA ĐỘ VÀ CHIỀU RỘNG CÁC CỘT BẢNG TRANG 2 (Để căn giữa giống Excel)
+                const colSpecs = {
+                    plate:   { startX: 52,  width: 108 }, // Biển số xe
+                    tonnage: { startX: 160, width: 73  }, // Tải trọng xe
+                    weight:  { startX: 233, width: 73  }, // Trọng lượng hàng
+                    cargo:   { startX: 306, width: 153 }, // Danh mục hàng hóa
+                    staff:   { startX: 459, width: 55  }  // Số nhân viên
+                };
 
                 truckRows.forEach((rowElement, i) => {
                     const currentY = startY - (i * lineSpacing);
@@ -550,11 +554,11 @@
                     const cargo = rowElement.querySelector('.cargoName').value;
                     const staff = rowElement.querySelector('.staffNum').value;
 
-                    if (plate) secondPage.drawText(plate, { x: 98, y: currentY, size: 11, font: customFont });
-                    if (tonnage) secondPage.drawText(tonnage, { x: 188, y: currentY, size: 11, font: customFont });
-                    if (weight) secondPage.drawText(weight, { x: 261, y: currentY, size: 11, font: customFont });
-                    if (cargo) secondPage.drawText(cargo, { x: 336, y: currentY, size: 11, font: customFont });
-                    if (staff) secondPage.drawText(staff, { x: 475, y: currentY, size: 11, font: customFont });
+                    drawCenteredText(secondPage, plate, colSpecs.plate.startX, colSpecs.plate.width, currentY, 11, customFont);
+                    drawCenteredText(secondPage, tonnage, colSpecs.tonnage.startX, colSpecs.tonnage.width, currentY, 11, customFont);
+                    drawCenteredText(secondPage, weight, colSpecs.weight.startX, colSpecs.weight.width, currentY, 11, customFont);
+                    drawCenteredText(secondPage, cargo, colSpecs.cargo.startX, colSpecs.cargo.width, currentY, 11, customFont);
+                    drawCenteredText(secondPage, staff, colSpecs.staff.startX, colSpecs.staff.width, currentY, 11, customFont);
                 });
             }
 
