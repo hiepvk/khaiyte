@@ -48,6 +48,27 @@
             box-sizing: border-box;
             width: 100%;
         }
+        .date-input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .date-input-group input {
+            flex: 1;
+        }
+        .btn-today {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0 15px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+        .btn-today:hover {
+            background-color: #d35400;
+        }
         .row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -153,7 +174,7 @@
     <h2>KHAI BÁO Y TẾ</h2>
     
     <div class="status-box">
-        <strong>⚙️ Cập nhật:</strong>
+        <strong>⚙️ Cập nhật:</strong> Các mục Tấn chỉ cho phép nhập tối đa 2 chữ số & tự động ghép chữ "Tấn".
     </div>
 
     <form id="declarationForm" oninput="syncAllData()">
@@ -161,7 +182,10 @@
         <div class="row">
             <div class="form-group">
                 <label style="color: #2980b9;">Ngày, tháng, năm (Khai hàng hóa):</label>
-                <input type="text" id="dateCargo" placeholder="VD: 08/07/2026">
+                <div class="date-input-group">
+                    <input type="text" id="dateCargo" placeholder="Nhập số VD: 26072026" maxlength="10" oninput="formatDateInput(this)">
+                    <button type="button" class="btn-today" onclick="setTodayDate()">Hôm nay</button>
+                </div>
             </div>
             <div class="form-group">
                 <label style="color: #2980b9;">Tên chủ hàng:</label>
@@ -186,7 +210,7 @@
             </div>
             <div class="form-group">
                 <label>Trọng lượng:</label>
-                <input type="text" id="page1CargoWeight1" placeholder="VD: 26 Tấn">
+                <input type="text" id="page1CargoWeight1" placeholder="Nhập tối đa 2 số (VD: 26)" oninput="formatTonInput(this)">
             </div>
         </div>
 
@@ -197,7 +221,7 @@
             </div>
             <div class="form-group">
                 <label>Tổng cộng Trọng lượng (Total Gross weight):</label>
-                <input type="text" id="page1TotalWeight" placeholder="VD: 26 Tấn">
+                <input type="text" id="page1TotalWeight" placeholder="Nhập tối đa 2 số (VD: 26)" oninput="formatTonInput(this)">
             </div>
         </div>
 
@@ -222,7 +246,7 @@
         <div class="row-5">
             <div class="form-group">
                 <label>Số hiệu / biển số:</label>
-                <input type="text" id="p1RegNo1" placeholder="VD: 15C13397">
+                <input type="text" id="p1RegNo1" placeholder="VD: 15C13397" oninput="formatPlateInput(this)">
             </div>
             <div class="form-group">
                 <label>Số lượng:</label>
@@ -230,7 +254,7 @@
             </div>
             <div class="form-group">
                 <label>Trọng tải (tấn):</label>
-                <input type="text" id="p1Tonnage1" placeholder="VD: 30 Tấn">
+                <input type="text" id="p1Tonnage1" placeholder="Nhập tối đa 2 số (VD: 30)" oninput="formatTonInput(this)">
             </div>
             <div class="form-group">
                 <label>Nhân viên:</label>
@@ -263,17 +287,17 @@
                 <div class="row">
                     <div class="form-group">
                         <label>Số hiệu / Biển số xe (Registration No.):</label>
-                        <input type="text" class="truckPlate" placeholder="VD: 15C13397">
+                        <input type="text" class="truckPlate" placeholder="VD: 15C13397" oninput="formatPlateInput(this)">
                     </div>
                     <div class="form-group">
                         <label>Tải trọng xe (Net Tonnage):</label>
-                        <input type="text" class="netTonnage" placeholder="VD: 30 Tấn">
+                        <input type="text" class="netTonnage" placeholder="Nhập tối đa 2 số (VD: 30)" oninput="formatTonInput(this)">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
                         <label>Trọng lượng hàng hóa (Gross Weight):</label>
-                        <input type="text" class="grossWeight" placeholder="VD: 26 Tấn">
+                        <input type="text" class="grossWeight" placeholder="Nhập tối đa 2 số (VD: 26)" oninput="formatTonInput(this)">
                     </div>
                     <div class="form-group">
                         <label>Danh mục hàng hóa (Name of Cargo):</label>
@@ -303,6 +327,65 @@
             isDeclarantManuallyEdited = true;
         });
     });
+
+    // Hàm chỉ cho phép nhập số, giới hạn tối đa 2 chữ số và tự động thêm " Tấn"
+    function formatTonInput(input) {
+        // Lấy riêng các chữ số (0-9)
+        let num = input.value.replace(/\D/g, '');
+        
+        // Giới hạn tối đa 2 chữ số
+        if (num.length > 2) {
+            num = num.substring(0, 2);
+        }
+
+        if (num.length > 0) {
+            input.value = num + " Tấn";
+            // Giữ con trỏ chuột đứng ngay sau phần số vừa nhập
+            const pos = num.length;
+            input.setSelectionRange(pos, pos);
+        } else {
+            input.value = "";
+        }
+        syncAllData();
+    }
+
+    // Hàm tự động chuyển chữ cái trong biển số xe thành viết hoa
+    function formatPlateInput(input) {
+        input.value = input.value.toUpperCase();
+        syncAllData();
+    }
+
+    // Hàm chỉ cho phép nhập số và tự động thêm dấu / khi nhập đủ 8 số (VD: 26072026 -> 26/07/2026)
+    function formatDateInput(input) {
+        let value = input.value.replace(/\D/g, '');
+        
+        if (value.length > 8) {
+            value = value.substring(0, 8);
+        }
+
+        if (value.length > 4) {
+            input.value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4);
+        } else if (value.length > 2) {
+            input.value = value.substring(0, 2) + '/' + value.substring(2);
+        } else {
+            input.value = value;
+        }
+
+        syncAllData();
+    }
+
+    // Hàm cho nút "Hôm nay"
+    function setTodayDate() {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        
+        const dateStr = `${dd}/${mm}/${yyyy}`;
+        const input = document.getElementById('dateCargo');
+        input.value = dateStr;
+        syncAllData();
+    }
 
     function syncAllData() {
         // 1. Đồng bộ Ngày tháng
@@ -335,17 +418,17 @@
                 <div class="row">
                     <div class="form-group">
                         <label>Số hiệu / Biển số xe (Registration No.):</label>
-                        <input type="text" class="truckPlate" placeholder="VD: 15C-22222">
+                        <input type="text" class="truckPlate" placeholder="VD: 15C13397" oninput="formatPlateInput(this)">
                     </div>
                     <div class="form-group">
                         <label>Tải trọng xe (Net Tonnage):</label>
-                        <input type="text" class="netTonnage" placeholder="VD: 30 Tấn">
+                        <input type="text" class="netTonnage" placeholder="Nhập tối đa 2 số (VD: 30)" oninput="formatTonInput(this)">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
                         <label>Trọng lượng hàng hóa (Gross Weight):</label>
-                        <input type="text" class="grossWeight" placeholder="VD: 26 Tấn">
+                        <input type="text" class="grossWeight" placeholder="Nhập tối đa 2 số (VD: 26)" oninput="formatTonInput(this)">
                     </div>
                     <div class="form-group">
                         <label>Danh mục hàng hóa (Name of Cargo):</label>
