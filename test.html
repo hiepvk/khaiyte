@@ -568,15 +568,15 @@
                 }
 
                 const truckRows = document.querySelectorAll('.truck-item');
-                let startCenterY = 413.5;
-                let lineSpacing = 17.05;
+                let startCenterY = 434.3;
+                let lineSpacing = 17.4;
 
                 const colSpecs = {
-                    plate:   { startX: 101, width: 90 },
-                    tonnage: { startX: 191, width: 57 },
-                    weight:  { startX: 248, width: 66 },
-                    cargo:   { startX: 314, width: 132 },
-                    staff:   { startX: 446, width: 57 }
+                    plate:   { startX: 70.3, width: 96.5 },
+                    tonnage: { startX: 166.8, width: 72.4 },
+                    weight:  { startX: 239.2, width: 72.4 },
+                    cargo:   { startX: 311.6, width: 120.6 },
+                    staff:   { startX: 432.2, width: 96.5 }
                 };
 
                 truckRows.forEach((rowElement, i) => {
@@ -588,11 +588,11 @@
                     const cargo = rowElement.querySelector('.cargoName').value;
                     const staff = rowElement.querySelector('.staffNum').value;
 
-                    drawCenteredText(secondPage, plate, colSpecs.plate.startX, colSpecs.plate.width, currentCenterY, 16, 10.5, customFont);
-                    drawCenteredText(secondPage, tonnage, colSpecs.tonnage.startX, colSpecs.tonnage.width, currentCenterY, 16, 10.5, customFont);
-                    drawCenteredText(secondPage, weight, colSpecs.weight.startX, colSpecs.weight.width, currentCenterY, 16, 10.5, customFont);
-                    drawCenteredText(secondPage, cargo, colSpecs.cargo.startX, colSpecs.cargo.width, currentCenterY, 16, 10.5, customFont);
-                    drawCenteredText(secondPage, staff, colSpecs.staff.startX, colSpecs.staff.width, currentCenterY, 16, 10.5, customFont);
+                    drawCenteredText(secondPage, plate, colSpecs.plate.startX, colSpecs.plate.width, currentCenterY, 17.4, 10.5, customFont);
+                    drawCenteredText(secondPage, tonnage, colSpecs.tonnage.startX, colSpecs.tonnage.width, currentCenterY, 17.4, 10.5, customFont);
+                    drawCenteredText(secondPage, weight, colSpecs.weight.startX, colSpecs.weight.width, currentCenterY, 17.4, 10.5, customFont);
+                    drawCenteredText(secondPage, cargo, colSpecs.cargo.startX, colSpecs.cargo.width, currentCenterY, 17.4, 10.5, customFont);
+                    drawCenteredText(secondPage, staff, colSpecs.staff.startX, colSpecs.staff.width, currentCenterY, 17.4, 10.5, customFont);
                 });
             }
 
